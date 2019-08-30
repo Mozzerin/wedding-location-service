@@ -1,0 +1,170 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Wedding Location Service
+  description: Internal api of wedding portal
+  contact:
+    name: Mozzerin
+    email: mozzerin@gmail.com
+paths:
+  /locations:
+    get:
+      description: Search locations by search parameters
+      operationId: findLocations
+      parameters:
+        - name: limit
+          in: query
+          description: maximum number of results to return
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Locations
+          content:
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      description: Create a new location for wedding
+      operationId: postLocation
+      requestBody:
+        description: Location to add to the portal
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewLocation'
+      responses:
+        '201':
+          description: Location response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /locations/{id}:
+    get:
+      description: Returns a location to the user
+      operationId: findLocationById
+      parameters:
+        - name: id
+          in: path
+          description: ID of location to fetch
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Location response
+          content:
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/Location'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      description: Delete location from database
+      operationId: deleteLocation
+      parameters:
+        - name: id
+          in: path
+          description: externalID of location to delete
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: Location deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Location:
+      allOf:
+        - $ref: '#/components/schemas/NewLocation'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+
+    NewLocation:
+      type: object
+      required:
+        - name
+        - address
+        - shortDescription
+      properties:
+        name:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+          type: object
+        shortDescription:
+          type: string
+        longDescription:
+          type: string
+        photos:
+          type: array
+          items:
+            type: string
+            format: binary
+        rating:
+          type: integer
+          format: int32
+
+    Address:
+      type: object
+      required:
+        - city
+        - street
+        - haus
+      properties:
+        city:
+          type: string
+        street:
+          type: string
+        haus:
+          type: string
+        building:
+          type: string
+        additional:
+          type: string
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string

@@ -1,0 +1,14 @@
+{
+  "library": "spring-mvc",
+  "modelPackage": "com.smsys.weddinglocationservice.model",
+  "apiPackage": "com.smsys.weddinglocationservice.api",
+  "configPackage": "com.smsys.weddinglocationservice.config",
+  "invokerPackage": "com.smsys.weddinglocationservice",
+  "artifactId": "location.service.server",
+  "groupId": "com.smsys.weddinglocationservice",
+  "performBeanValidation": true,
+  "dateLibrary": "java8",
+  "hideGenerationTimestamp": true,
+  "interfaceOnly": true,
+  "generateSupportingFiles": false
+}
